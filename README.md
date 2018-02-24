@@ -1,48 +1,91 @@
 
-We and other only support portable containers such as Docker with
-NAS storage such as blockstorage or S3.
-
 ALL major and most other cloud hosting providers offer Docker with block storage. With docker and blockstorage volume, it makes it easier to change your cloud provider. 
 
 
 # A: Recommended installation, via provided image:
-0. Install docker in your cloud host. Before that - secure your host.
+0. Install docker in your cloud host. Before that - secure your host. Mount your 'NAS' storage, ex:
 
-1. From docker, fetch our docker image: 'cekvenich/bake'.
+ 	    mount /mnt/blockstorage
+
+1. From docker, fetch our docker image, http://hub.docker.com/r/cekvenich/bake 
+
+		docker pull -cekvenich/bake
+		docker images
 
 2. Setup your block storage, and mount the block storage(NAS| S3) to your host. 
+	In /mnt/blockstorage
+			
+			mkdir vol
 
 3. Start the container with the 'bake' image and mount the host to your container. Add this to the run command.
 
-     --mount type=bind,source=/mnt/blockstorage/vol,target=root/vol
+     		--mount type=bind,source=/mnt/blockstorage/vol,target=root/vol
+	
+		docker run -d -p 8080:8080 --mount type=bind,source=/mnt/blockstorage/vol,target=/root/vol cekvenich/bake /sbin/my_init
 
-	Done!
+	Done! Reboot. From any SSH:
+	
+		docker ps
+	    docker exec -ti ID /bin/bash
+	    docker exec -ti b8700550acbe /bin/bash
 
-5. You likely don't want Docker running as root, so you can fix that.
+		cd /root/vol
+		create /root/vol/Wedgefile
+	      :8080
+	      gzip
+	      root public
+	      tls off
+	    
+	From inside the running Docker continer, run WedgeServer
+	
+	     /root/wedge
 
-5. Optional, for hardcore programmers only: setup codeanywhere as SFTP to the host. Edit the vol code in host (that is mounted to docker container). The Docker container should auto build for you. Maybe make it easier to find.
+	from host:	
 
-      ln -s /mnt/blockstorage/vol
+	     curl localhost:8080
+
+5. You likely don't want Docker daemon running as root, so you should fix that.
+
+5. Get a DNS name (PSA: not from go-daddy ). Point your DNS to your CDN (ex: cdn77, keyCDN ). Point your CDN to your IP address/port. NEVER expose your host IP to www via DNS.
+
+
+5. Optional, for hardcore programmers only: setup cloud IDE (ex codeanywhere)   as SFTP to the host. Edit the vol code in host (that is mounted to docker container). 
+The Docker container 'SSH' could auto build for you (ex: gulp, gradle, etc). 
+
+      	ln -s /mnt/blockstorage/vol /root/vol
+   
       
- XXX Here is a video of sample remote docker IDE.     
+ XXX Here is a video of demo of remote docker IDE.     
       
-
-# B: Alternative source code installation.
+# B: Alternative recepie from scratch.
 
 Create Docker host instance with block storage(or NAS, S3)
 Ex: Vultur, Fedora (click 'Block Storage Compatible').
+I use Linux, but if you like Windows most major hosts (including Vultur) offer it, and some smaller ones host OSX mini (but OSX hosts tend not to offer NAS options ).
 
 1. Add Block Storage (NAS) to Linux.
 Using Block Storage helps you manage storage size and Docker helps you migrate
 
-2. Attach the storage as per instructions. Then mount the storage. Ex:
+	Before setting up the machine - test the internet speed. If speed is slow, setup on another provider:
 
-     mount /mnt/blockstorage
+		pip install speedtest-cli
+		speedtest-cli
+		
+	Or you can move your image and storage to another provider later, there are a dozen hosting proviers that offer more than 10-gigabits/sec - but not of the big 3 AFAIK. Also, this is a good time to open a browser (|IOS|Anorid) based SSH.  
+	
 
-3. Add security.
+2. Attach the storage as per instructions of your host. Then 'format' and mount the storage. Ex:
 
-4. Install docker - in the mounted block storage folder!
-    
+    	 mount /mnt/blockstorage
+
+3. Add security to your cloud host. Ex: iptables, fail2ban, etc.
+
+4. Install docker - in the mounted block storage folder! Follow web instructions - this is just my block.
+
+
+			yum update / upgrade
+			dnf install https://download.docker.com/linux/fedora/25/x86_64/stable/Packages/docker-ce-17.06.0.ce-1.fc25.x86_64.rpm
+	or		
 	     dnf -y install dnf-plugins-core
 	    
 	     dnf config-manager \
@@ -52,19 +95,16 @@ Using Block Storage helps you manage storage size and Docker helps you migrate
 	    dnf install docker-ce
 	    
 	    systemctl start docker
+	    systemctl enable docker
+	    docker info
 
 5. Don't install anything on linux - other than Docker. Install everything inside of Docker.
 
-
-6. Optional.In case you have issues, this may help:
-
-	    inside /etc/selinux/config
-	    SELINUX=permissive
     
-7. Make image, make a Dockerfile:
+7. We start with a phusion baseimage. Make a Dockerfile. 
 	
-	    FROM phusion/baseimage
-	    MAINTAINER vic (vic@eml.cc)
+		    FROM phusion/baseimage
+		    MAINTAINER vic (vic@eml.cc)
 	     
 	    docker build -t bake:latest .
  
@@ -87,7 +127,7 @@ Using Block Storage helps you manage storage size and Docker helps you migrate
 	Optional if you like the Vi Visual Editor: install NERDTree (via apt-vim )
 
 
-10. XXX We need a web/http server. WedgeServer.
+10. We need a web/http server. WedgeServer in golang. ( a Caddy Server fork )
 		
 		apt-get update / upgrade	    
 	   apt-get install mlocate
@@ -99,7 +139,7 @@ Using Block Storage helps you manage storage size and Docker helps you migrate
 		apt-get update
 		apt-get install golang-go
 
-	   	 go get github.com/WedgeServer/builds
+	   	go get github.com/WedgeServer/builds
 	    go get github.com/WedgeServer/wedge/caddy
 	    cd   go/src/github.com/WedgeServer/wedge/caddy
 	    go run build.go
@@ -156,13 +196,32 @@ Using Block Storage helps you manage storage size and Docker helps you migrate
 
 
 
-11. Save your own container. Before you stop it or kill it.
+11. Save your own container! Before you stop it or kill it.
 
 	    docker commit XID myBake
 	    docker stop XID
     
-    And test, so you sure you can back and restore your block storage volume. 
+    And test, so you sure you can back and restore your block storage mount. 
 
 
+# C: Paid install
+Paypal me $5 with your host (ex: Vultr, AWS) temp password, and I'll set it up.
+Then after the install, change your host and root password. 
+
+## Support
+Supported via git issue tracker is:
+
+- Linux remote host (running locally or OSX/Windows will work but is not supported)
+- with NAS mounts (it runs fine without mounting blocstorage, but why )
+Others are on their own.
+
+## Bonus: 
+
+- You may want to setup a browser proxy in your docker host, and then configure your local browser to use that proxy. (ex: littleProxy)
+- You may want to setup a terminal email client in your docker host.  (ex: http://www.tecmint.com/send-email-attachment-from-linux-commandline )
+- You may want to secure your git server to firewall to your docker host IP range. 
+- Heck, uload your photos, videos and music files. Make a private radio station (ex: icecast ).
+- Of course, host your statically generated website and blog there.
+Honestly, you should not have any storage or run anything locally other than the browser - just put it all in remote docker.
 
 
