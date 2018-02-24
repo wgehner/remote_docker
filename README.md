@@ -1,13 +1,14 @@
+# Remote WebServer Docker Image with mounted (block) storage
 
 ALL major and most other cloud hosting providers offer Docker with block storage. With docker and blockstorage volume, it makes it easier to change your cloud provider. 
 
 
-# A: Recommended installation, via provided image:
+## A: Recommended installation, via provided image:
 0. Install docker in your cloud host. Before that - secure your host. Mount your 'NAS' storage, ex:
 
  	    mount /mnt/blockstorage
 
-1. From docker, fetch our docker image, http://hub.docker.com/r/cekvenich/bake 
+1. From docker, fetch our docker image, http://hub.docker.com/r/cekvenich/bake. The image BOM has java, npm, gulp, grunt, http server (WedgeServer), sdk man pre-installed so you can get up and running.
 
 		docker pull -cekvenich/bake
 		docker images
@@ -46,7 +47,7 @@ ALL major and most other cloud hosting providers offer Docker with block storage
 
 5. You likely don't want Docker daemon running as root, so you should fix that.
 
-5. Get a DNS name (PSA: not from go-daddy ). Point your DNS to your CDN (ex: cdn77, keyCDN ). Point your CDN to your IP address/port. NEVER expose your host IP to www via DNS.
+5. Get a DNS name (PSA: not from go-daddy ). Point your DNS to your CDN (ex: cdn77 ). Point your CDN to your IP address/port. NEVER expose your host IP to www via DNS.
 
 
 5. Optional, for hardcore programmers only: setup cloud IDE (ex codeanywhere)   as SFTP to the host. Edit the vol code in host (that is mounted to docker container). 
@@ -55,9 +56,12 @@ The Docker container 'SSH' could auto build for you (ex: gulp, gradle, etc).
       	ln -s /mnt/blockstorage/vol /root/vol
    
       
- XXX Here is a video of demo of remote docker IDE.     
+ XXX Here is a video of demo of the optional (for hardcore programmers) remote docker IDE.     
       
-# B: Alternative recepie from scratch.
+### Note: Most should just use the continer to host their webserver.
+
+ 
+## B: Alternative recepie from scratch.
 
 Create Docker host instance with block storage(or NAS, S3)
 Ex: Vultur, Fedora (click 'Block Storage Compatible').
@@ -204,7 +208,7 @@ Using Block Storage helps you manage storage size and Docker helps you migrate
     And test, so you sure you can back and restore your block storage mount. 
 
 
-# C: Paid install
+## C: Paid install
 Paypal me $5 with your host (ex: Vultr, AWS) temp password, and I'll set it up.
 Then after the install, change your host and root password. 
 
