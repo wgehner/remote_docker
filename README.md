@@ -3,10 +3,23 @@
 ALL major and most other cloud hosting providers offer Docker with block storage. With docker and blockstorage volume, it makes it easier to change your cloud provider. 
 
 
-## A: Recommended installation, via provided image:
-0. Install docker in your cloud host. Before that - secure your host. Mount your 'NAS' storage, ex:
+## A: Recommended installation (example: vultr.com_:
 
- 	    mount /mnt/blockstorage
+1. Buy an Ubuntu 16.04 instance at vultr.com. Pick New Jersey as location (which supports blockstorage. Check "Supports Blockstorage" during signup.)
+Once the instance is running, go to the top Menu item "Block Storage", buy 10 gb blockstorage, edit (Manage) and attach it to the instance. Then follow the instructions to mount the storage (as root) with the last command being
+
+		mount /mnt/blockstorage
+
+2. Add a user
+
+		adduser nas_user
+		usermod -aG sudo nas_user
+
+and install docker
+
+e.g. https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-16-04
+
+
 
 1. From docker, fetch our docker image, http://hub.docker.com/r/cekvenich/bake. The image BOM has java, npm, gulp, grunt, http server (WedgeServer), sdk man pre-installed so you can get up and running.
 
@@ -20,11 +33,9 @@ ALL major and most other cloud hosting providers offer Docker with block storage
 
 3. Start the container with the 'bake' image and mount the host to your container. Add this to the run command.
 
-     		--mount type=bind,source=/mnt/blockstorage/vol,target=root/vol
-	
 		docker run -d -p 8080:8080 --mount type=bind,source=/mnt/blockstorage/vol,target=/root/vol cekvenich/bake /sbin/my_init
 
-	Done! Reboot. From any SSH:
+	Done! From any SSH:
 	
 		docker ps
 	    docker exec -ti ID /bin/bash
