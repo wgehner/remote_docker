@@ -23,7 +23,7 @@ e.g. https://www.digitalocean.com/community/tutorials/how-to-install-and-use-doc
 
 1. From docker, fetch our docker image, http://hub.docker.com/r/cekvenich/bake. The image BOM has java, npm, gulp, grunt, http server (WedgeServer), sdk man pre-installed so you can get up and running.
 
-		docker pull -cekvenich/bake
+		docker pull cekvenich/bake
 		docker images
 
 2. Setup your block storage, and mount the block storage(NAS| S3) to your host. 
