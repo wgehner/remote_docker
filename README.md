@@ -74,6 +74,7 @@ The image BOM has git, java, npm, gulp, grunt, http server (WedgeServer), sdk ma
 
 5. If using git form common:
 
+		git status
 		export GIT_DISCOVERY_ACROSS_FILESYSTEM=1
 
 	Just so you are aware it is a diffrent file system. I could have put that in the image - but better that you be aware of the boundary in case you install other software or make another image.
