@@ -156,3 +156,9 @@ docker tag imagebuildinginprocess rusrushal13/get-started:part1
 docker push rusrushal13/get-started:part1
 
 
+/////
+
+lsof
+
+
+

@@ -67,7 +67,10 @@ The image BOM has git, java, npm, gulp, grunt, http server (WedgeServer), sdk ma
 	Test from host (outside of the docker):
 
 	     curl localhost:8080
-	     
+	    
+	 If you get a port in use error:
+	 
+		 lsof -i tcp:8080
 
 5. If using git form common:
 
@@ -75,7 +78,7 @@ The image BOM has git, java, npm, gulp, grunt, http server (WedgeServer), sdk ma
 
 	Just so you are aware it is a diffrent file system. I could have put that in the image - but better that you be aware of the boundary in case you install other software or make another image.
 
-5. Optional, for hardcore programmers only: setup cloud IDE (ex codeanywhere)  as SFTP to the host. Edit the common 'git' code in host, that is mounted to docker container.  (You can also setup a web based git client)
+5. Last, for hardcore programmers only: setup cloud IDE (ex codeanywhere)  as SFTP to the host. Edit the common 'git' code in host, that is mounted to docker container.  (You can also setup a web based git client)
 The Docker container could auto build for you (ex: gulp, gradle, etc). 
    
       
