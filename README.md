@@ -86,17 +86,11 @@ Here is a video of demo of the optional (for hardcore programmers) remote docker
  
 
 ## Alternative installation: Paid install
-Paypal me $5 with your host (ex: Vultr, AWS) temp password, and I'll set it up.
-Then after the install, change your host and root password. 
+Paypal me $5 with your host (ex: Vultr, AWS) temp password, and I'll set it up docker on your host, with NAS/block storage.
+Then after the install, change your host and root password and load what ever docker image container you like
 
-## Support
-Supported via git issue tracker is:
 
-- Linux remote host (running locally or OSX/Windows will work but is not supported)
-- with 'NAS' mounts (it runs fine without mounting blocstorage, but why )
-- Running Wedge Server, something from staticgen.com or similar. 
-
-## Bonus: 
+## Bonus ideas: 
 
 - You may want to setup a browser proxy in your docker host, and then configure your local browser to use that proxy. (ex: littleProxy)
 - You may want to setup a terminal email client in your docker host.  (ex: http://www.tecmint.com/send-email-attachment-from-linux-commandline )
