@@ -4,61 +4,67 @@
 
 Most cloud hosting providers offer Docker with block storage. With docker and blockstorage volume, it makes it easier to develop or change your cloud provider. 
 
-The image BOM has java, npm, gulp, grunt, http server (WedgeServer), sdk man pre-installed so you can get up and running. It is based on baseimage from phusion(ubuntu).
+The image BOM has git, java, npm, gulp, grunt, http server (WedgeServer), sdk man, apt-vim pre-installed so you can get up and running. It is based on __baseimage from phusion(ubuntu)__.
 
 
 ## Installation 
 
-1. Rent a host instance, ex Fedora. Ex: AWS LightSail, Vultr, Ali Baba cloud or 50 others. Make sure it "Supports Blockstorage" during signup. Start the instance. Test the network speed, ex:
+#### Note: All commands assume 'sudo '.
+
+1. Rent a host instance, Ex: AWS LightSail AMI, Vultr/Fedora, Ali Baba Cloud, Azure or 50 others. I like to use a different hosts for different docker instances :-). Make sure it "Supports Blockstorage" during signup. Start the instance. Test the network speed, ex:
 
 		pip install speedtest-cli
 		speedtest-cli
 
 	If it is slow - go to a different provider!
 
-2. Set up blockstorage and attach it to the instance. Then follow the instructions to mount the storage (as root) with the last command being:
+2. Set up blockstorage and attach it to the instance. Then follow the instructions to mount the storage (as root) with the last command similar to (note the name of the common folder you crate on your monut):
 
 		mount /mnt/blockstorage
+		mkdir /mnt/blockstorage/common
 		
+	- [AWS is a bit harder](http://archive.is/hehgz) and mounts common in /mnt/blockstorage 
+	
+	Maybe test create a text file in common folder with a text editor (ex: nano ).
 	
 2. Secure the box, ex: iptables, fail2ban. Install docker, with the last command being:
 
+		docker info
 		systemctl enable docker
 
+	I would now stop and restart the host and make sure the mounted storage is auto mounted and docker auto runs at reboot (docker ps).
 
 1. From docker, fetch our docker image, http://hub.docker.com/r/cekvenich/bake. 
 
 		docker pull cekvenich/bake
 		docker images
 
-2. Setup your block storage, and mount the block storage(NAS| S3) to your host. 
-	In /mnt/blockstorage
-			
-			mkdir common
 
 3. Start the container with the 'bake' image and mount the host to your container. Add this to the run command.
 
-		docker run -d -p 8080:8080 --mount type=bind,source=/mnt/blockstorage/common,target=/root/common cekvenich/bake /sbin/my_init
+		docker run -d -p 8080:8080 --mount type=bind,source=/mnt/blockstorage/common,target=/common cekvenich/bake /sbin/my_init
 
-	Done! Anytime you want to access you docker container:
+	Almost done. Anytime you want to access you docker container:
 	
 		docker ps
 	    docker exec -ti ID /bin/bash
+	
+	... where ID is the process id from above command. That last line you may want to make into a con.sh shell command since you'll do it a lot.
 
-4. Now to start the http server, serveing files from common folder but running in ocker.
+4. Now to start the http server, serving files from common folder but running insider your docker container:
 
-		cd /root/common
+		cd /common
 		create /root/common/Wedgefile
 	      :8080
 	      gzip
 	      root public
 	      tls off
 	    
-	From inside the running Docker continer, run WedgeServer
+	Create a index.html('oh hi') inside a ./public folder.From inside the running Docker continer, run WedgeServer
 	
 	     /root/wedge
 
-	Test from host:	
+	Test from host (outside of the docker):
 
 	     curl localhost:8080
 	     
@@ -67,14 +73,14 @@ The image BOM has java, npm, gulp, grunt, http server (WedgeServer), sdk man pre
 
 		export GIT_DISCOVERY_ACROSS_FILESYSTEM=1
 
-	Just so you are aware it is a diffrent file system.
+	Just so you are aware it is a diffrent file system. I could have put that in the image - but better that you be aware of the boundary in case you install other software or make another image.
 
 5. Optional, for hardcore programmers only: setup cloud IDE (ex codeanywhere)  as SFTP to the host. Edit the common 'git' code in host, that is mounted to docker container.  (You can also setup a web based git client)
 The Docker container could auto build for you (ex: gulp, gradle, etc). 
    
       
 Here is a video of demo of the optional (for hardcore programmers) remote docker IDE.     
-- [Youtube demo](http://youtu.be/0BkUom01XVc)
+	- [Youtube video](http://youtu.be/0BkUom01XVc)
 
 
  
