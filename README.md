@@ -4,7 +4,7 @@
 
 Most cloud hosting providers offer Docker with block storage. With docker and blockstorage volume, it makes it easier to develop or change your cloud provider. 
 
-The image BOM has git, java, npm, gulp, grunt, http server (WedgeServer), sdk man, apt-vim pre-installed so you can get up and running. It is based on __baseimage from phusion(ubuntu)__.
+The image BOM has git, java, npm, gulp, grunt, gohttp http server, sdk man, apt-vim pre-installed so you can get up and running. It is based on __baseimage from phusion(ubuntu)__.
 
 
 ## Installation 
@@ -55,18 +55,10 @@ The image BOM has git, java, npm, gulp, grunt, http server (WedgeServer), sdk ma
 4. Now to start the http server, serving files from common folder but running insider your docker container.
 	[http server ex](https://github.com/itang/gohttp) 
 	
-	You can use armor or any http server you like. 	WedgeServer is allredy compiled to /root/wedge. Ex Wedgefile:
-
-		cd /root/common
-		create /root/common/Wedgefile
-	      :8080
-	      gzip
-	      root public
-	      tls off
-	    
-	Create a index.html('oh hi') inside a ./public folder. From inside the running Docker continer, run WedgeServer with:
+	You can use armor or any http server you like. 	    
+	Create a index.html('oh hi') inside a ./public folder. From inside the running Docker continer, run gohttp http server with - from the common folder where you have an index.html or such:
 	
-	     /root/wedge
+	     gohttp
 
 	Test from host (outside of the docker):
 

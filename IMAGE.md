@@ -141,19 +141,20 @@ Using Block Storage helps you manage storage size and Docker helps you migrate
 
 11. ****** Save your own container! Before you stop it or kill it.
 
-	    docker commit XID myBake
+	    docker commit f6bdffedc58e cekvenich/bake:latest
 	    docker stop XID
     
     And test, so you sure you can back and restore your block storage mount. 
 
-13. Moar
+13. added
 
 		add-apt-repository ppa:git-core/ppa
 
 14. push the image
-docker tag imagebuildinginprocess rusrushal13/get-started:part1
 
-docker push rusrushal13/get-started:part1
+		docker tag bake cekvenich/bake:latest
+		
+		docker push rusrushal13/get-started:part1
 
 
 /////
