@@ -52,7 +52,10 @@ The image BOM has git, java, npm, gulp, grunt, http server (WedgeServer), sdk ma
 	
 	... where ID is the process id from above command. That last line you may want to make into a con.sh shell command since you'll do it a lot.
 
-4. Now to start the http server, serving files from common folder but running insider your docker container:
+4. Now to start the http server, serving files from common folder but running insider your docker container.
+	[http server ex](https://github.com/itang/gohttp) 
+	
+	You can use armor or any http server you like. 	WedgeServer is allredy compiled to /root/wedge. Ex Wedgefile:
 
 		cd /root/common
 		create /root/common/Wedgefile
@@ -61,7 +64,7 @@ The image BOM has git, java, npm, gulp, grunt, http server (WedgeServer), sdk ma
 	      root public
 	      tls off
 	    
-	Create a index.html('oh hi') inside a ./public folder.From inside the running Docker continer, run WedgeServer with:
+	Create a index.html('oh hi') inside a ./public folder. From inside the running Docker continer, run WedgeServer with:
 	
 	     /root/wedge
 
@@ -69,7 +72,7 @@ The image BOM has git, java, npm, gulp, grunt, http server (WedgeServer), sdk ma
 
 	     curl localhost:8080
 	    
-	 If you get a port in use error:
+	 If you get a port in use error, you can get a pid to kill.
 	 
 		 lsof -i tcp:8080
 
