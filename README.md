@@ -4,7 +4,7 @@
 
 Most cloud hosting providers offer Docker with block storage. With docker and blockstorage volume, it makes it easier to develop or change your cloud provider. 
 
-The image BOM has git, java, npm, gulp, grunt, gohttp http server, sdk man, apt-vim pre-installed so you can get up and running. It is based on __baseimage from phusion(ubuntu)__.
+The image BOM has git, java, npm/node/yarn, gulp, grunt, pip, gem/rubby, wedge(Caddy) server - in /root, sdk man, apt-vim pre-installed so you can get up and running. It is based on __baseimage from phusion(ubuntu)__.
 
 
 ## Installation 
@@ -43,7 +43,7 @@ The image BOM has git, java, npm, gulp, grunt, gohttp http server, sdk man, apt-
 
 3. Start the container with the 'bake' image and mount the host to your container. You need to be accurante with your source of mount.
 
-		docker run -d -p 8080:8080 --mount type=bind,source=/mnt/volume1/common,target=/root/common cekvenich/bake /sbin/my_init
+		docker run -d -p 8080:8080 --mount type=bind,source=/mnt/blockstorage/common,target=/root/common cekvenich/bake /sbin/my_init
 
 	Almost done. Anytime you want to access you docker container:
 	

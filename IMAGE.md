@@ -139,7 +139,7 @@ Using Block Storage helps you manage storage size and Docker helps you migrate
 
 
 
-11. ****** Save your own container! Before you stop it or kill it.
+11. ****** Save your own container! Before you stop it or kill it. By image id
 
 	    docker commit f6bdffedc58e cekvenich/bake:latest
 	    docker stop XID
@@ -149,12 +149,15 @@ Using Block Storage helps you manage storage size and Docker helps you migrate
 13. added
 
 		add-apt-repository ppa:git-core/ppa
+        
+        
+npm update, yarn, gem, pip
 
 14. push the image
 
 		docker tag bake cekvenich/bake:latest
 		
-		docker push rusrushal13/get-started:part1
+		docker push cekvenich/bake:latest
 
 
 /////
